@@ -3,6 +3,8 @@ import { createBabyValidation } from '../validations/baby.validation'
 import { logger } from '../utils/logger'
 import prisma from '../../lib/prisma'
 import { calculateAgeInMonths, dateFormatter } from '../utils/commonFunctions'
+// import { classify } from '../models/classify'
+// import { classify } from '../models/anthropometry'
 
 export const createBaby = async (req: Request, res: Response) => {
   const { error, value } = createBabyValidation(req.body)
@@ -15,13 +17,14 @@ export const createBaby = async (req: Request, res: Response) => {
     const baby = await prisma.baby.create({
       data: {
         name: value.name,
-        gender: value.gender,
+        gender: value.gender === 'Laki-Laki' ? 'male' : 'female',
         birthdate: value.birthdate,
         parent_name: value.parent_name,
         address: value.address,
         phone_number: value.phone_number
       }
     })
+    logger.info('Success add baby data')
     return res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Menambahkan Data', data: { baby } })
   } catch (error) {
     logger.error('Err = baby-create', error)
@@ -39,7 +42,8 @@ export const getBaby = async (req: Request, res: Response) => {
         parent_name: true,
         phone_number: true,
         address: true,
-        birthdate: true
+        birthdate: true,
+        baby_condition: true
       }
     })
     const result = responses.map((response) => ({

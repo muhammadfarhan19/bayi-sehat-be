@@ -3,12 +3,14 @@ import { HealthRouter } from './health'
 import { AuthRouter } from './auth.route'
 import { BabyRouter } from './baby.route'
 import { BabyConditionRouter } from './condition.route'
+import { AntropometricRouter } from './antropometric.route'
 
 const _routes: Array<[string, Router]> = [
   ['/health', HealthRouter],
   ['/auth', AuthRouter],
   ['/baby', BabyRouter],
-  ['/condition', BabyConditionRouter]
+  ['/condition', BabyConditionRouter],
+  ['/antropometric', AntropometricRouter]
 ]
 
 export const routes = (app: Application) => {
