@@ -24,8 +24,8 @@ export const createBaby = async (req: Request, res: Response) => {
         phone_number: value.phone_number
       }
     })
-    logger.info('Success add baby data')
-    return res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Menambahkan Data', data: { baby } })
+    logger.info('Success add new data')
+    return res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Menambahkan Data', data: baby })
   } catch (error) {
     logger.error('Err = baby-create', error)
     return res.status(422).send({ status: false, statusCode: 422, message: error })
@@ -133,7 +133,7 @@ export const getBabyDetail = async (req: Request, res: Response) => {
     params: { id }
   } = req
   try {
-    const response = await prisma.baby.findFirst({
+    const response = await prisma.baby.findUnique({
       where: { id },
       select: {
         name: true,

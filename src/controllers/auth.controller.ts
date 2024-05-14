@@ -13,7 +13,7 @@ export const userRegistration = async (req: Request, res: Response) => {
     return res.status(422).send({
       status: false,
       statusCode: 422,
-      message: error.details[0].message
+      message: error.message
     })
   }
 
@@ -40,7 +40,7 @@ export const userRegistration = async (req: Request, res: Response) => {
     return res.status(422).send({
       status: false,
       statusCode: 422,
-      message: error.details[0].message
+      message: error.message
     })
   }
 }
@@ -53,7 +53,7 @@ export const createUserSession = async (req: Request, res: Response) => {
     return res.status(422).send({
       status: false,
       statusCode: 422,
-      message: error.details[0].message
+      message: error.message
     })
   }
 
@@ -84,7 +84,7 @@ export const createUserSession = async (req: Request, res: Response) => {
     return res.status(422).send({
       status: false,
       statusCode: 422,
-      message: error.details[0].message
+      message: error.message
     })
   }
 }
