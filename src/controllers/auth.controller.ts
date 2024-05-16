@@ -58,7 +58,7 @@ export const createUserSession = async (req: Request, res: Response) => {
   }
 
   try {
-    const user: any = await prisma.user.findFirst({
+    const user: any = await prisma.user.findUnique({
       where: {
         email: req.body.email
       }
@@ -80,7 +80,7 @@ export const createUserSession = async (req: Request, res: Response) => {
       .status(200)
       .send({ status: true, statusCode: 200, message: 'Login success', data: { accessToken, refreshToken } })
   } catch (error: any) {
-    logger.info('ERR: user - registration = ', error.message)
+    logger.info('ERR: user - login = ', error.message)
     return res.status(422).send({
       status: false,
       statusCode: 422,

@@ -3,8 +3,6 @@ import { createBabyValidation } from '../validations/baby.validation'
 import { logger } from '../utils/logger'
 import prisma from '../../lib/prisma'
 import { calculateAgeInMonths, dateFormatter } from '../utils/commonFunctions'
-// import { classify } from '../models/classify'
-// import { classify } from '../models/anthropometry'
 
 export const createBaby = async (req: Request, res: Response) => {
   const { error, value } = createBabyValidation(req.body)
@@ -111,7 +109,7 @@ export const deleteBaby = async (req: Request, res: Response) => {
     })
     await prisma.baby_condition.deleteMany({
       where: {
-        id
+        baby_id: id
       }
     })
 

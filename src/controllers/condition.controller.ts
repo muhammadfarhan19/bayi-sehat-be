@@ -1,14 +1,20 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from 'express'
 import prisma from '../../lib/prisma'
 import { logger } from '../utils/logger'
-import { dateFormatter, getMonth } from '../utils/commonFunctions'
+import { createBabyConditionValidation } from '../validations/condition.validation'
 
 export const createBabyCondition = async (req: Request, res: Response) => {
-  const { month, weight, height } = req.body
+  const { error, value } = createBabyConditionValidation(req.body)
 
   const {
     params: { id }
   } = req
+
+  if (error) {
+    logger.error('Err = baby condition-create', error.details[0].message)
+    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
+  }
 
   try {
     const checkBaby = await prisma.baby.findUnique({
@@ -23,9 +29,9 @@ export const createBabyCondition = async (req: Request, res: Response) => {
 
     const response = await prisma.baby_condition.create({
       data: {
-        month,
-        weight,
-        height,
+        month: value.month,
+        weight: value.weight,
+        height: value.height,
         baby: {
           connect: {
             id
@@ -53,19 +59,38 @@ export const getBabyConditions = async (req: Request, res: Response) => {
         baby_id: id
       }
     })
-
-    // const result = responses.map((response) => ({
-    //   ...response,
-    //   // month: getMonth(response.created_at),
-    //   created_at: dateFormatter(response.created_at),
-    //   updated_at: dateFormatter(response.updated_at)
-    // }))
+    console.log(id)
 
     logger.info('Get baby conditions successfully')
     return res.status(200).send({ status: true, statusCode: 200, data: responses })
   } catch (error) {
     logger.error('Err = baby-read', error)
     return res.status(422).send({ status: false, statuseCode: 422, message: error })
+  }
+}
+
+export const getDetailBabyCondition = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { condition_id } = req.query
+
+  try {
+    const response = await prisma.baby_condition.findUnique({
+      where: {
+        id: condition_id as string,
+        baby_id: id
+      }
+    })
+
+    if (response) {
+      logger.info('Get detail baby condition successfully')
+      return res.status(200).send({ status: true, statusCode: 200, data: response })
+    } else {
+      logger.warn('No baby condition found for the given ID and condition ID')
+      return res.status(404).send({ status: false, statusCode: 404, message: 'Baby condition not found' })
+    }
+  } catch (error) {
+    logger.error('Err = baby condition-read', error)
+    return res.status(422).send({ status: false, statusCode: 422, message: error })
   }
 }
 
