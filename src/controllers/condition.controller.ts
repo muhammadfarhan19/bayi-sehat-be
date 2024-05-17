@@ -59,7 +59,6 @@ export const getBabyConditions = async (req: Request, res: Response) => {
         baby_id: id
       }
     })
-    console.log(id)
 
     logger.info('Get baby conditions successfully')
     return res.status(200).send({ status: true, statusCode: 200, data: responses })

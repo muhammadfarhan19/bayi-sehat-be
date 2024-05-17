@@ -3,6 +3,8 @@ import { createBabyValidation } from '../validations/baby.validation'
 import { logger } from '../utils/logger'
 import prisma from '../../lib/prisma'
 import { calculateAgeInMonths, dateFormatter } from '../utils/commonFunctions'
+import { Analyzer } from '..//modules/function'
+import BabyType from '../types/baby.type'
 
 export const createBaby = async (req: Request, res: Response) => {
   const { error, value } = createBabyValidation(req.body)
@@ -44,12 +46,28 @@ export const getBaby = async (req: Request, res: Response) => {
         baby_condition: true
       }
     })
-    const result = responses.map((response) => ({
-      ...response,
-      birthdate: dateFormatter(response.birthdate),
-      age: calculateAgeInMonths(response.birthdate),
-      gender: response.gender === 'male' ? 'Laki-Laki' : 'Perempuan'
-    }))
+    const result = responses.map((response) => {
+      const lastCondition = response.baby_condition[response.baby_condition.length - 1]
+      const age = calculateAgeInMonths(response.birthdate)
+      const gender = response.gender === 'male' ? 'Laki-Laki' : 'Perempuan'
+
+      let status = null
+      if (lastCondition) {
+        status = Analyzer({
+          weight: lastCondition.weight,
+          age,
+          gender: response.gender === 'male' ? 'M' : 'F'
+        })
+      }
+
+      return {
+        ...response,
+        age,
+        gender,
+        weight: lastCondition ? lastCondition.weight : null,
+        status: status ? status.BBperU : null
+      }
+    })
     logger.info('Success get baby data')
     return res.status(200).send({ status: true, statusCode: 200, data: result })
   } catch (error) {
@@ -130,6 +148,7 @@ export const getBabyDetail = async (req: Request, res: Response) => {
   const {
     params: { id }
   } = req
+
   try {
     const response = await prisma.baby.findUnique({
       where: { id },
@@ -143,11 +162,31 @@ export const getBabyDetail = async (req: Request, res: Response) => {
         baby_condition: true
       }
     })
+
+    if (!response) {
+      return res.status(404).send({ status: false, statusCode: 404, message: 'Baby not found' })
+    }
+
+    const lastCondition = response.baby_condition[response.baby_condition.length - 1]
+    const age = calculateAgeInMonths(response.birthdate)
+    const gender = response.gender === 'male' ? 'Laki-Laki' : 'Perempuan'
+
+    let status = null
+    if (lastCondition) {
+      status = Analyzer({
+        weight: lastCondition.weight,
+        age,
+        gender: response.gender === 'male' ? 'M' : 'F'
+      })
+    }
+
     const result = {
       ...response,
-      age: calculateAgeInMonths(response?.birthdate),
-      birthdate: dateFormatter(response?.birthdate)
+      age,
+      birthdate: dateFormatter(response.birthdate),
+      status: status ? status.BBperU : null
     }
+
     logger.info('Success get detail baby')
     return res.status(200).send({ status: true, statusCode: 200, data: result })
   } catch (error) {
