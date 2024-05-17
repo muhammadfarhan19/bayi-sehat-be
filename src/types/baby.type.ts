@@ -8,5 +8,7 @@ export default interface BabyType {
   gender: Gender
   parent_name: string
   phone_number: string
+  age: number
+  status: string
   baby_condition: BabyConditionType[]
 }

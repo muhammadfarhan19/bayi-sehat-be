@@ -25,7 +25,6 @@ export const userRegistration = async (req: Request, res: Response) => {
         name: value.name,
         email: value.email,
         password: value.password,
-        address: value.address,
         role: value.role
       }
     })
@@ -36,7 +35,7 @@ export const userRegistration = async (req: Request, res: Response) => {
       message: 'User Registration Successfully'
     })
   } catch (error: any) {
-    logger.info('ERR: auth - registration = ', error.details[0].message)
+    logger.info('ERR: auth - registration = ', error)
     return res.status(422).send({
       status: false,
       statusCode: 422,

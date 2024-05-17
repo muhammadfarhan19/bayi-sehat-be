@@ -4,7 +4,6 @@ import { logger } from '../utils/logger'
 import prisma from '../../lib/prisma'
 import { calculateAgeInMonths, dateFormatter } from '../utils/commonFunctions'
 import { Analyzer } from '..//modules/function'
-import BabyType from '../types/baby.type'
 
 export const createBaby = async (req: Request, res: Response) => {
   const { error, value } = createBabyValidation(req.body)
@@ -39,12 +38,14 @@ export const getBaby = async (req: Request, res: Response) => {
         id: true,
         name: true,
         gender: true,
+        age: true,
         parent_name: true,
         phone_number: true,
         address: true,
         birthdate: true,
         baby_condition: true
-      }
+      },
+      orderBy: { name: 'asc' }
     })
     const result = responses.map((response) => {
       const lastCondition = response.baby_condition[response.baby_condition.length - 1]

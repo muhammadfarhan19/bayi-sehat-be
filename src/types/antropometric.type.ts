@@ -1,12 +1,12 @@
 export interface AntropometricType {
-  age_in_month: number 
-  sd_minus_3: number 
-  sd_minus_2: number 
-  sd_minus_1: number 
-  median: number 
-  sd_plus_1: number 
-  sd_plus_2: number 
-  sd_plus_3: number 
+  age_in_month: number
+  sd_minus_3: number
+  sd_minus_2: number
+  sd_minus_1: number
+  median: number
+  sd_plus_1: number
+  sd_plus_2: number
+  sd_plus_3: number
 }
 
 export interface inputBabyType {
