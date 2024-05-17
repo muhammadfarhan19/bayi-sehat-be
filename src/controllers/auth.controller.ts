@@ -60,11 +60,11 @@ export const createUserSession = async (req: Request, res: Response) => {
   try {
     const user: any = await prisma.user.findUnique({
       where: {
-        email: req.body.email
+        email: value.email
       }
     })
     const isValid = checkPassword(value.password, user?.password)
-    if (!isValid) {
+    if (!isValid || !user) {
       return res.status(401).json({
         status: false,
         statusCode: 401,
@@ -76,6 +76,7 @@ export const createUserSession = async (req: Request, res: Response) => {
 
     const refreshToken = signJWT({ ...user }, { expiresIn: '1y' })
 
+    logger.info('SUCCESS: User Login')
     return res
       .status(200)
       .send({ status: true, statusCode: 200, message: 'Login Berhasil', data: { accessToken, refreshToken } })
