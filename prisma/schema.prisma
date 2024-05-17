@@ -19,7 +19,6 @@ model user {
   password      String
   address       String
   role          role
-  // baby_id       baby[]
 }
 
 

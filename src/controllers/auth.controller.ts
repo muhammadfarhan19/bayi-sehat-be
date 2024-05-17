@@ -68,7 +68,7 @@ export const createUserSession = async (req: Request, res: Response) => {
       return res.status(401).json({
         status: false,
         statusCode: 401,
-        message: 'Invalid Email or Password'
+        message: 'Email atau Kata Sandi Salah!!'
       })
     }
 
@@ -78,7 +78,7 @@ export const createUserSession = async (req: Request, res: Response) => {
 
     return res
       .status(200)
-      .send({ status: true, statusCode: 200, message: 'Login success', data: { accessToken, refreshToken } })
+      .send({ status: true, statusCode: 200, message: 'Login Berhasil', data: { accessToken, refreshToken } })
   } catch (error: any) {
     logger.info('ERR: user - login = ', error.message)
     return res.status(422).send({
@@ -133,7 +133,12 @@ export const refreshSession = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany()
+    const users = await prisma.user.findFirst({
+      select: {
+        name: true,
+        email: true
+      }
+    })
     return res.status(200).json({
       status: true,
       statusCode: 200,
