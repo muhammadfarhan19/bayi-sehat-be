@@ -3,13 +3,15 @@ import {
   DeleteBabyCondition,
   createBabyCondition,
   getBabyConditions,
-  getDetailBabyCondition
+  getDetailBabyCondition,
+  updateBabyCondition
 } from '../controllers/condition.controller'
 import { requireBaby } from '../middleware/baby'
 
 export const BabyConditionRouter: Router = Router()
 
-BabyConditionRouter.get('/:id', requireBaby, getBabyConditions)
 BabyConditionRouter.post('/:id', requireBaby, createBabyCondition)
 BabyConditionRouter.delete('/:id', requireBaby, DeleteBabyCondition)
-BabyConditionRouter.get('/:id?condition_id=condition_id', requireBaby, getDetailBabyCondition)
+BabyConditionRouter.get('/:id', requireBaby, getBabyConditions)
+BabyConditionRouter.get('/detail/:id', requireBaby, getDetailBabyCondition)
+BabyConditionRouter.put('/update/:id', requireBaby, updateBabyCondition)

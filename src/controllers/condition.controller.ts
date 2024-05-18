@@ -42,7 +42,7 @@ export const createBabyCondition = async (req: Request, res: Response) => {
     logger.info('Add baby condition successfully')
     return res
       .status(201)
-      .send({ status: true, statusCode: 201, message: 'Add Baby Condition Successfully', data: response })
+      .send({ status: true, statusCode: 201, message: 'Berhasil Menambahkan Data', data: response })
   } catch (error) {
     logger.error('ERR: create - condition = ', error)
     return res.status(422).send({ status: false, statusCode: 422, message: error })
@@ -70,13 +70,11 @@ export const getBabyConditions = async (req: Request, res: Response) => {
 
 export const getDetailBabyCondition = async (req: Request, res: Response) => {
   const { id } = req.params
-  const { condition_id } = req.query
 
   try {
-    const response = await prisma.baby_condition.findUnique({
+    const response = await prisma.baby_condition.findFirst({
       where: {
-        id: condition_id as string,
-        baby_id: id
+        id
       }
     })
 
@@ -106,13 +104,44 @@ export const DeleteBabyCondition = async (req: Request, res: Response) => {
     })
     if (response) {
       logger.info('Delete Baby Condition Successfully')
-      res.status(200).send({ status: true, statusCode: 200, message: 'Delete Baby Condition Successfully' })
+      res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Menghapus Data' })
     } else {
       logger.info('Baby Condition not Found')
-      return res.status(404).send({ status: true, statusCode: 404, message: 'Baby Condition not Found' })
+      return res.status(404).send({ status: true, statusCode: 404, message: 'Gagal Menghapus Data' })
     }
   } catch (error) {
     logger.error('Err = baby-read', error)
     return res.status(422).send({ status: false, statuseCode: 422, message: error })
+  }
+}
+
+export const updateBabyCondition = async (req: Request, res: Response) => {
+  const {
+    params: { id }
+  } = req
+
+  const { error, value } = createBabyConditionValidation(req.body)
+
+  if (error) {
+    logger.error('Err = baby condition-create', error.details[0].message)
+    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
+  }
+
+  try {
+    await prisma.baby_condition.update({
+      where: {
+        id
+      },
+      data: {
+        month: value.month,
+        weight: value.weight,
+        height: value.height
+      }
+    })
+    logger.info('Update baby condition successfully')
+    return res.status(201).send({ status: true, statusCode: 201, message: 'Berhasil Memperbarui Kondisi' })
+  } catch (error) {
+    logger.error('ERR: update - condition = ', error)
+    return res.status(422).send({ status: false, statusCode: 422, message: error })
   }
 }
