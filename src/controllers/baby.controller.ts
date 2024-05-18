@@ -38,7 +38,6 @@ export const getBaby = async (req: Request, res: Response) => {
         id: true,
         name: true,
         gender: true,
-        age: true,
         parent_name: true,
         phone_number: true,
         address: true,

@@ -7,8 +7,8 @@ export const createBabyValidation = (payload: BabyType) => {
     gender: Joi.string().required(),
     birthdate: Joi.date().required(),
     parent_name: Joi.string().required(),
-    address: Joi.string().allow('', null),
-    phone_number: Joi.string().allow('', null)
+    address: Joi.string().allow('', null).default('Dukuh Gading'),
+    phone_number: Joi.string().allow('', null).default('-')
   })
   return schema.validate(payload)
 }

@@ -24,8 +24,7 @@ export const userRegistration = async (req: Request, res: Response) => {
         id: value.id,
         name: value.name,
         email: value.email,
-        password: value.password,
-        role: value.role
+        password: value.password
       }
     })
     logger.info('User created')
