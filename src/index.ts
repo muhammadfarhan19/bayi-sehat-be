@@ -8,6 +8,22 @@ import deserializeToken from './middleware/deserializedToken'
 const app: Application = express()
 const port: number = 4000
 
+const allowedOrigins = ['http://localhost:4000', 'https://bayi-sehat.vercel.app']
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+    methods: '*',
+    allowedHeaders: '*'
+  })
+)
+
 // parse body req
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
