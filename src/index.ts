@@ -8,7 +8,7 @@ import deserializeToken from './middleware/deserializedToken'
 const app: Application = express()
 const port: number = 4000
 
-const allowedOrigins = ['http://localhost:4000', 'https://bayi-sehat.vercel.app']
+const allowedOrigins = ['http://localhost:3000', 'https://bayi-sehat.vercel.app']
 
 app.use(
   cors({
@@ -20,17 +20,18 @@ app.use(
       }
     },
     methods: '*',
-    allowedHeaders: '*'
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    credentials: true
   })
 )
 
-// parse body req
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', '*')
-  res.setHeader('Access-Control-Allow-Headers', '*')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
   next()
 })
 
