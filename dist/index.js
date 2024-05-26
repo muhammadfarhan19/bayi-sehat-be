@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const routes_1 = require("./routes");
 const logger_1 = require("./utils/logger");
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
@@ -35,6 +36,9 @@ app.use((req, res, next) => {
 app.use(deserializedToken_1.default);
 app.get('/', (req, res) => {
     res.send('Express on Vercel');
+});
+app.use('/', () => {
+    (0, routes_1.routes)(app);
 });
 app.listen(port, () => {
     logger_1.logger.info(`listening on http://localhost:${port}`);
