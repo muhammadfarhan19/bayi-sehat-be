@@ -37,7 +37,7 @@ app.use(deserializedToken_1.default);
 // app.get('/', (req, res) => {
 //   res.send('Express on Vercel')
 // })
-app.use('/', routes_1.default);
+app.use('/api', routes_1.default);
 app.listen(port, () => {
     logger_1.logger.info(`listening on http://localhost:${port}`);
 });

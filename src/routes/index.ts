@@ -1,19 +1,10 @@
-import { Application, Router } from 'express'
-import { HealthRouter } from './health'
-import { AuthRouter } from './auth.route'
-import { BabyRouter } from './baby.route'
-import { BabyConditionRouter } from './condition.route'
+import { Router } from 'express'
+import { homePageHandler } from '../controllers/homepage.controller'
+import { getBaby } from '../controllers/baby.controller'
 
-const _routes: Array<[string, Router]> = [
-  ['/', HealthRouter],
-  ['/auth', AuthRouter],
-  ['/baby', BabyRouter],
-  ['/condition', BabyConditionRouter]
-]
+const router = Router()
 
-export const routes = (app: Application) => {
-  _routes.forEach((route) => {
-    const [url, router] = route
-    app.use(url, router)
-  })
-}
+router.get('/home', homePageHandler)
+router.get('/baby', getBaby)
+
+export default router
