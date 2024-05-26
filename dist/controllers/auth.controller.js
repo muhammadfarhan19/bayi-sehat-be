@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUsers = exports.refreshSession = exports.createUserSession = exports.userRegistration = void 0;
+exports.refreshSession = exports.createUserSession = exports.userRegistration = void 0;
 const auth_validation_1 = require("../validations/auth.validation");
 const logger_1 = require("../utils/logger");
 const hashing_1 = require("../utils/hashing");
@@ -132,28 +132,3 @@ const refreshSession = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.refreshSession = refreshSession;
-const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const users = yield prisma_1.default.user.findFirst({
-            select: {
-                name: true,
-                email: true
-            }
-        });
-        return res.status(200).json({
-            status: true,
-            statusCode: 200,
-            message: 'Users fetched successfully',
-            data: users
-        });
-    }
-    catch (error) {
-        logger_1.logger.error('Error fetching users:', error);
-        return res.status(500).json({
-            status: false,
-            statusCode: 500,
-            message: 'Internal server error'
-        });
-    }
-});
-exports.getUsers = getUsers;
