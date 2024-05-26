@@ -6,7 +6,7 @@ import { BabyConditionRouter } from './condition.route'
 import { AntropometricRouter } from './antropometric.route'
 
 const _routes: Array<[string, Router]> = [
-  ['/health', HealthRouter],
+  ['/', HealthRouter],
   ['/auth', AuthRouter],
   ['/baby', BabyRouter],
   ['/condition', BabyConditionRouter],
