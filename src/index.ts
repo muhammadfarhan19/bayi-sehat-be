@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 app.use(deserializeToken)
 
 app.get('/', (req, res) => {
-  res.send('Express on Vercel')
+  res.send('Bayi Sehat API is Ready to Use')
 })
 
 app.get('/auth/', getUsers)
