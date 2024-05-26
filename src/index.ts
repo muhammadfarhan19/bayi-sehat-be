@@ -3,7 +3,6 @@ import { logger } from './utils/logger'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import deserializeToken from './middleware/deserializedToken'
-import router from './routes'
 
 const app: Application = express()
 const port: number = 4000
@@ -37,11 +36,9 @@ app.use((req, res, next) => {
 
 app.use(deserializeToken)
 
-// app.get('/', (req, res) => {
-//   res.send('Express on Vercel')
-// })
-
-app.use('/', router)
+app.get('/', (req, res) => {
+  res.send('Express on Vercel')
+})
 
 app.listen(port, () => {
   logger.info(`listening on http://localhost:${port}`)
