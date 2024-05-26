@@ -5,7 +5,7 @@ import { requireUser } from '../middleware/auth'
 export const BabyRouter: Router = Router()
 
 BabyRouter.get('/', getBaby)
-BabyRouter.get('/:id', getBabyDetail)
-BabyRouter.post('/', createBaby)
-BabyRouter.delete('/:id', deleteBaby)
-BabyRouter.put('/:id', updateBaby)
+BabyRouter.get('/detail/:id', getBabyDetail)
+BabyRouter.post('/create', createBaby)
+BabyRouter.delete('/delete/:id', deleteBaby)
+BabyRouter.put('/put/:id', updateBaby)
