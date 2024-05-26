@@ -4,6 +4,9 @@ import { logger } from './utils/logger'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import deserializeToken from './middleware/deserializedToken'
+import { BabyRouter } from './routes/baby.route'
+import { AuthRouter } from './routes/auth.route'
+import { BabyConditionRouter } from './routes/condition.route'
 
 const app: Application = express()
 const port: number = 4000
@@ -40,6 +43,10 @@ app.use(deserializeToken)
 app.get('/', (req, res) => {
   res.send('Express on Vercel')
 })
+
+app.use('/baby', BabyRouter)
+app.use('/auth', AuthRouter)
+app.use('/condition', BabyConditionRouter)
 
 app.listen(port, () => {
   logger.info(`listening on http://localhost:${port}`)
