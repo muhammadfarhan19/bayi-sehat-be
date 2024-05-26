@@ -44,10 +44,6 @@ app.get('/', (req, res) => {
   res.send('Express on Vercel')
 })
 
-app.use('/baby', BabyRouter)
-app.use('/auth', AuthRouter)
-app.use('/condition', BabyConditionRouter)
-
 app.listen(port, () => {
   logger.info(`listening on http://localhost:${port}`)
 })
