@@ -8,9 +8,6 @@ const logger_1 = require("./utils/logger");
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const deserializedToken_1 = __importDefault(require("./middleware/deserializedToken"));
-const baby_route_1 = require("./routes/baby.route");
-const auth_route_1 = require("./routes/auth.route");
-const condition_route_1 = require("./routes/condition.route");
 const app = (0, express_1.default)();
 const port = 4000;
 const allowedOrigins = ['http://localhost:3000', 'https://bayi-sehat.vercel.app'];
@@ -39,9 +36,6 @@ app.use(deserializedToken_1.default);
 app.get('/', (req, res) => {
     res.send('Express on Vercel');
 });
-app.use('/baby', baby_route_1.BabyRouter);
-app.use('/auth', auth_route_1.AuthRouter);
-app.use('/condition', condition_route_1.BabyConditionRouter);
 app.listen(port, () => {
     logger_1.logger.info(`listening on http://localhost:${port}`);
 });
