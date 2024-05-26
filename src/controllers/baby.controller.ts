@@ -194,3 +194,33 @@ export const getBabyDetail = async (req: Request, res: Response) => {
     return res.status(422).send({ status: false, statusCode: 422, message: error })
   }
 }
+
+export const getMaleBaby = async (req: Request, res: Response) => {
+  try {
+    const response = await prisma.baby.findMany({
+      where: {
+        gender: 'male'
+      }
+    })
+    logger.info('Success get male babies')
+    return res.status(200).send({ status: true, statusCode: 200, data: response })
+  } catch (error) {
+    logger.error('Err = male baby-get', error)
+    return res.status(422).send({ status: false, statusCode: 422, message: error })
+  }
+}
+
+export const getFemaleBaby = async (req: Request, res: Response) => {
+  try {
+    const response = await prisma.baby.findMany({
+      where: {
+        gender: 'female'
+      }
+    })
+    logger.info('Success get female babies')
+    return res.status(200).send({ status: true, statusCode: 200, data: response })
+  } catch (error) {
+    logger.error('Err = female baby-get', error)
+    return res.status(422).send({ status: false, statusCode: 422, message: error })
+  }
+}
