@@ -6,7 +6,7 @@ import cors from 'cors'
 import deserializeToken from './middleware/deserializedToken'
 
 const app: Application = express()
-const port: number = 3000
+const port: number = 4000
 
 const allowedOrigins = ['http://localhost:3000', 'https://bayi-sehat.vercel.app']
 
