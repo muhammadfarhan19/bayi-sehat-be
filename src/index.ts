@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import deserializeToken from './middleware/deserializedToken'
 import router from './routes'
+import { routes } from './routes/index copy'
 
 const app: Application = express()
 const port: number = 4000
@@ -41,7 +42,8 @@ app.use(deserializeToken)
 //   res.send('Express on Vercel')
 // })
 
-app.use('/api', router)
+// app.use('/api', router)
+routes(app)
 
 app.listen(port, () => {
   logger.info(`listening on http://localhost:${port}`)
