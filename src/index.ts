@@ -41,6 +41,8 @@ app.get('/', (req, res) => {
   res.send('Express on Vercel')
 })
 
+app.use('/', routes)
+
 app.listen(port, () => {
   logger.info(`listening on http://localhost:${port}`)
 })

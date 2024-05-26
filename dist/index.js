@@ -9,7 +9,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const deserializedToken_1 = __importDefault(require("./middleware/deserializedToken"));
 const app = (0, express_1.default)();
-const port = 3000;
+const port = 4000;
 const allowedOrigins = ['http://localhost:3000', 'https://bayi-sehat.vercel.app'];
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
