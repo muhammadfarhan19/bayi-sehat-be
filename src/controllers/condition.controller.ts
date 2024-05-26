@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from 'express'
-import prisma from '../../lib/prisma'
+import prisma from '../lib/prisma'
 import { logger } from '../utils/logger'
 import { createBabyConditionValidation } from '../validations/condition.validation'
 
@@ -40,9 +40,7 @@ export const createBabyCondition = async (req: Request, res: Response) => {
       }
     })
     logger.info('Add baby condition successfully')
-    return res
-      .status(201)
-      .send({ status: true, statusCode: 201, message: 'Berhasil Menambahkan Data', data: response })
+    return res.status(201).send({ status: true, statusCode: 201, message: 'Berhasil Menambahkan Data', data: response })
   } catch (error) {
     logger.error('ERR: create - condition = ', error)
     return res.status(422).send({ status: false, statusCode: 422, message: error })

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { createBabyValidation } from '../validations/baby.validation'
 import { logger } from '../utils/logger'
-import prisma from '../../lib/prisma'
+import prisma from '../lib/prisma'
 import { calculateAgeInMonths, dateFormatter } from '../utils/commonFunctions'
 import { Analyzer } from '..//modules/function'
 

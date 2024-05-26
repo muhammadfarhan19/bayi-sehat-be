@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { createSessionValidation, createUserValidation, refreshSessionValidation } from '../validations/auth.validation'
 import { logger } from '../utils/logger'
 import { checkPassword, hashing } from '../utils/hashing'
-import prisma from '../../lib/prisma'
+import prisma from '../lib/prisma'
 import { signJWT, verifyJWT } from '../utils/jwt'
 
 export const userRegistration = async (req: Request, res: Response) => {
