@@ -42,8 +42,8 @@ app.use(deserializeToken)
 //   res.send('Express on Vercel')
 // })
 
-// app.use('/api', router)
-routes(app)
+app.use('/api', router)
+// routes(app)
 
 app.listen(port, () => {
   logger.info(`listening on http://localhost:${port}`)

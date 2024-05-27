@@ -1,9 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const homepage_controller_1 = require("../controllers/homepage.controller");
 const baby_controller_1 = require("../controllers/baby.controller");
+const auth_controller_1 = require("../controllers/auth.controller");
+const baby_1 = require("../middleware/baby");
+const condition_controller_1 = require("../controllers/condition.controller");
 const router = (0, express_1.Router)();
-router.get('/home', homepage_controller_1.homePageHandler);
+// router.get('/home', homePageHandler)
+router.post('/auth/register', auth_controller_1.userRegistration);
+router.post('/auth/login', auth_controller_1.createUserSession);
+router.post('/auth/refresh', auth_controller_1.refreshSession);
 router.get('/baby', baby_controller_1.getBaby);
+router.get('/baby/detail/:id', baby_controller_1.getBabyDetail);
+router.post('/baby/create', baby_controller_1.createBaby);
+router.delete('/baby/delete/:id', baby_controller_1.deleteBaby);
+router.put('/baby/put/:id', baby_controller_1.updateBaby);
+router.get('/baby/male', baby_controller_1.getMaleBaby);
+router.get('/baby/female', baby_controller_1.getFemaleBaby);
+router.post('/condition/create/:id', baby_1.requireBaby, condition_controller_1.createBabyCondition);
+router.delete('/condition/delete/:id', baby_1.requireBaby, condition_controller_1.DeleteBabyCondition);
+router.get('/condition/:id', baby_1.requireBaby, condition_controller_1.getBabyConditions);
+router.get('/condition/detail/:id', baby_1.requireBaby, condition_controller_1.getDetailBabyCondition);
+router.put('/condition/update/:id', baby_1.requireBaby, condition_controller_1.updateBabyCondition);
 exports.default = router;
