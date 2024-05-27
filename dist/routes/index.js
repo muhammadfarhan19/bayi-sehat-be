@@ -6,7 +6,9 @@ const auth_controller_1 = require("../controllers/auth.controller");
 const baby_1 = require("../middleware/baby");
 const condition_controller_1 = require("../controllers/condition.controller");
 const router = (0, express_1.Router)();
-// router.get('/home', homePageHandler)
+router.get('/', (req, res) => {
+    res.send('Bayi Sehat API is Ready');
+});
 router.post('/auth/register', auth_controller_1.userRegistration);
 router.post('/auth/login', auth_controller_1.createUserSession);
 router.post('/auth/refresh', auth_controller_1.refreshSession);

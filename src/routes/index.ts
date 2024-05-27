@@ -20,7 +20,9 @@ import {
 
 const router = Router()
 
-// router.get('/home', homePageHandler)
+router.get('/', (req, res) => {
+  res.send('Bayi Sehat API is Ready')
+})
 
 router.post('/auth/register', userRegistration)
 router.post('/auth/login', createUserSession)
