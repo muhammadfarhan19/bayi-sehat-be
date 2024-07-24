@@ -35,7 +35,6 @@ export const getBaby = async (req: Request, res: Response) => {
   try {
     const responses = await prisma.baby.findMany({
       select: {
-        id: true,
         name: true,
         gender: true,
         parent_name: true,
