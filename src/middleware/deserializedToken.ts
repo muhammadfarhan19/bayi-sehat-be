@@ -1,23 +1,31 @@
 import { NextFunction, Request, Response } from 'express'
 import { verifyJWT } from '../utils/jwt'
+import { logger } from '../utils/logger'
 
 const deserializeToken = async (req: Request, res: Response, next: NextFunction) => {
   const accessToken = req.headers.authorization?.replace(/^Bearer\s/, '')
+
   if (!accessToken) {
-    return next()
+    return res.status(401).json({ message: 'Unauthorized' })
   }
 
-  const token: any = verifyJWT(accessToken)
-  if (token.decoded) {
-    res.locals.user = token.decoded
-    return next()
-  }
+  try {
+    const { decoded, expired } = verifyJWT(accessToken)
 
-  if (token.expired) {
-    return next()
-  }
+    if (decoded) {
+      res.locals.user = decoded
+      return next()
+    }
 
-  return next()
+    if (expired) {
+      return res.status(401).json({ message: 'Token expired' })
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error('JWT Verification Error:', error.message)
+    }
+    return res.status(401).json({ message: 'Invalid Token' })
+  }
 }
 
 export default deserializeToken

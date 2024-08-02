@@ -4,7 +4,7 @@ import BabyType from '../types/baby.type'
 export const createBabyValidation = (payload: BabyType) => {
   const schema = Joi.object({
     name: Joi.string().required(),
-    gender: Joi.string().required(),
+    gender: Joi.string().required().valid('MALE', 'FEMALE'),
     birthdate: Joi.date().required(),
     parent_name: Joi.string().required(),
     address: Joi.string().allow('', null).default('Dukuh Gading'),

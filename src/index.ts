@@ -2,12 +2,13 @@ import express, { Application } from 'express'
 import { logger } from './utils/logger'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import deserializeToken from './middleware/deserializedToken'
 import router from './routes'
-import { routes } from './routes/index copy'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app: Application = express()
-const port: number = 4000
+const PORT = process.env.PORT
 
 const allowedOrigins = ['http://localhost:3000', 'https://bayi-sehat.vercel.app']
 
@@ -36,17 +37,10 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(deserializeToken)
+app.use('/api/v1', router)
 
-// app.get('/', (req, res) => {
-//   res.send('Express on Vercel')
-// })
-
-app.use('/api', router)
-// routes(app)
-
-app.listen(port, () => {
-  logger.info(`listening on http://localhost:${port}`)
+app.listen(PORT, () => {
+  logger.info(`listening on http://localhost:${PORT}`)
 })
 
 export default app

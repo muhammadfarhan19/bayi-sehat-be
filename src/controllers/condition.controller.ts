@@ -13,7 +13,7 @@ export const createBabyCondition = async (req: Request, res: Response) => {
 
   if (error) {
     logger.error('Err = baby condition-create', error.details[0].message)
-    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
+    return res.status(422).json({ status: false, statusCode: 422, message: error.details[0].message })
   }
 
   try {
@@ -24,7 +24,7 @@ export const createBabyCondition = async (req: Request, res: Response) => {
     })
 
     if (!checkBaby) {
-      return res.status(404).send({ status: false, statusCode: 404, message: 'Baby not found' })
+      return res.status(404).json({ status: false, statusCode: 404, message: 'Baby not found' })
     }
 
     const response = await prisma.baby_condition.create({
@@ -40,10 +40,10 @@ export const createBabyCondition = async (req: Request, res: Response) => {
       }
     })
     logger.info('Add baby condition successfully')
-    return res.status(201).send({ status: true, statusCode: 201, message: 'Berhasil Menambahkan Data', data: response })
+    return res.status(201).json({ status: true, statusCode: 201, message: 'Berhasil Menambahkan Data', data: response })
   } catch (error) {
     logger.error('ERR: create - condition = ', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
 
@@ -59,10 +59,10 @@ export const getBabyConditions = async (req: Request, res: Response) => {
     })
 
     logger.info('Get baby conditions successfully')
-    return res.status(200).send({ status: true, statusCode: 200, data: responses })
+    return res.status(200).json({ status: true, statusCode: 200, data: responses })
   } catch (error) {
     logger.error('Err = baby-read', error)
-    return res.status(422).send({ status: false, statuseCode: 422, message: error })
+    return res.status(422).json({ status: false, statuseCode: 422, message: error })
   }
 }
 
@@ -78,14 +78,14 @@ export const getDetailBabyCondition = async (req: Request, res: Response) => {
 
     if (response) {
       logger.info('Get detail baby condition successfully')
-      return res.status(200).send({ status: true, statusCode: 200, data: response })
+      return res.status(200).json({ status: true, statusCode: 200, data: response })
     } else {
       logger.warn('No baby condition found for the given ID and condition ID')
-      return res.status(404).send({ status: false, statusCode: 404, message: 'Baby condition not found' })
+      return res.status(404).json({ status: false, statusCode: 404, message: 'Baby condition not found' })
     }
   } catch (error) {
     logger.error('Err = baby condition-read', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
 
@@ -102,14 +102,14 @@ export const DeleteBabyCondition = async (req: Request, res: Response) => {
     })
     if (response) {
       logger.info('Delete Baby Condition Successfully')
-      res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Menghapus Data' })
+      res.status(200).json({ status: true, statusCode: 200, message: 'Berhasil Menghapus Data' })
     } else {
       logger.info('Baby Condition not Found')
-      return res.status(404).send({ status: true, statusCode: 404, message: 'Gagal Menghapus Data' })
+      return res.status(404).json({ status: true, statusCode: 404, message: 'Gagal Menghapus Data' })
     }
   } catch (error) {
     logger.error('Err = baby-read', error)
-    return res.status(422).send({ status: false, statuseCode: 422, message: error })
+    return res.status(422).json({ status: false, statuseCode: 422, message: error })
   }
 }
 
@@ -122,7 +122,7 @@ export const updateBabyCondition = async (req: Request, res: Response) => {
 
   if (error) {
     logger.error('Err = baby condition-create', error.details[0].message)
-    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
+    return res.status(422).json({ status: false, statusCode: 422, message: error.details[0].message })
   }
 
   try {
@@ -137,9 +137,9 @@ export const updateBabyCondition = async (req: Request, res: Response) => {
       }
     })
     logger.info('Update baby condition successfully')
-    return res.status(201).send({ status: true, statusCode: 201, message: 'Berhasil Memperbarui Kondisi' })
+    return res.status(201).json({ status: true, statusCode: 201, message: 'Berhasil Memperbarui Kondisi' })
   } catch (error) {
     logger.error('ERR: update - condition = ', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }

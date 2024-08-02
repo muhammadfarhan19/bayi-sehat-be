@@ -1,15 +1,6 @@
 import { Router } from 'express'
-import {
-  createBaby,
-  deleteBaby,
-  getBaby,
-  getBabyDetail,
-  getFemaleBaby,
-  getMaleBaby,
-  updateBaby
-} from '../controllers/baby.controller'
+import { createBaby, deleteBaby, getBaby, getBabyDetail, updateBaby } from '../controllers/baby.controller'
 import { createUserSession, refreshSession, userRegistration } from '../controllers/auth.controller'
-import { requireBaby } from '../middleware/baby'
 import {
   DeleteBabyCondition,
   createBabyCondition,
@@ -17,6 +8,7 @@ import {
   getDetailBabyCondition,
   updateBabyCondition
 } from '../controllers/condition.controller'
+import deserializeToken from '../middleware/deserializedToken'
 
 const router = Router()
 
@@ -28,18 +20,18 @@ router.post('/auth/register', userRegistration)
 router.post('/auth/login', createUserSession)
 router.post('/auth/refresh', refreshSession)
 
+router.use(deserializeToken)
+
 router.get('/baby', getBaby)
 router.get('/baby/detail/:id', getBabyDetail)
 router.post('/baby/create', createBaby)
 router.delete('/baby/delete/:id', deleteBaby)
 router.put('/baby/put/:id', updateBaby)
-router.get('/baby/male', getMaleBaby)
-router.get('/baby/female', getFemaleBaby)
 
-router.post('/condition/create/:id', requireBaby, createBabyCondition)
-router.delete('/condition/delete/:id', requireBaby, DeleteBabyCondition)
-router.get('/condition/:id', requireBaby, getBabyConditions)
-router.get('/condition/detail/:id', requireBaby, getDetailBabyCondition)
-router.put('/condition/update/:id', requireBaby, updateBabyCondition)
+router.post('/condition/create/:id', createBabyCondition)
+router.delete('/condition/delete/:id', DeleteBabyCondition)
+router.get('/condition/:id', getBabyConditions)
+router.get('/condition/detail/:id', getDetailBabyCondition)
+router.put('/condition/update/:id', updateBabyCondition)
 
 export default router

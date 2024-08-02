@@ -3,26 +3,30 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider = "mysql"
+  url      = env("DB_URL")
 }
+
 model user {
   id            String    @id @default(cuid())
   name          String
   email         String    @unique
   password      String
+  phone_number  String?   @unique
+  role          Role      @default(ADMIN)
+  babies        baby[]
 }
 
-
 model baby {
-  id                    String          @id @default(cuid())
+  id                    String           @id @default(cuid())
   name                  String
-  gender                String
+  gender                Gender
   birthdate             DateTime
-  parent_name           String
   address               String?
-  phone_number          String?
+  statusBBperU          StatusBBperU?
+  statustBperU          StatustBperU?
+  user                  user             @relation(fields: [user_id], references: [id])
+  user_id               String
   baby_condition        baby_condition[]
 }
 
@@ -30,9 +34,50 @@ model baby_condition {
   id                String    @id @default(cuid())
   baby              baby      @relation(fields: [baby_id], references: [id])
   baby_id           String
-  month             Int
+  month             Month
   weight            Float
   height            Float?
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Month {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum StatusBBperU {
+  SEVERELY_UNDERWEIGHT
+  UNDERWEIGHT
+  NORMAL
+  OVERWEIGHT
+  SEVERELY_OVERWEIGHT
+}
+
+enum StatustBperU {
+  SEVERELY_STUNTED
+  STUNTED
+  NORMAL
+  OVERHEIGHT
+  SEVERELY_OVERHEIGHT
 }

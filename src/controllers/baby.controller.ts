@@ -4,41 +4,50 @@ import { logger } from '../utils/logger'
 import prisma from '../lib/prisma'
 import { calculateAgeInMonths, dateFormatter } from '../utils/commonFunctions'
 import { Analyzer } from '..//modules/function'
+import { Gender } from '../utils/common'
 
 export const createBaby = async (req: Request, res: Response) => {
+  const user = req.params
   const { error, value } = createBabyValidation(req.body)
   if (error) {
     logger.error('Err = baby-create', error.details[0].message)
-    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
+    return res.status(422).json({ status: false, statusCode: 422, message: error.details[0].message })
   }
 
   try {
     const baby = await prisma.baby.create({
       data: {
         name: value.name,
-        gender: value.gender === 'Laki-Laki' ? 'male' : 'female',
+        gender: value.gender,
         birthdate: value.birthdate,
-        parent_name: value.parent_name,
         address: value.address,
-        phone_number: value.phone_number
+        user
       }
     })
     logger.info('Success add new data')
-    return res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Menambahkan Data', data: baby })
+    return res.status(200).json({ status: true, statusCode: 200, message: 'Berhasil Menambahkan Data', data: baby })
   } catch (error) {
     logger.error('Err = baby-create', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
 
 export const getBaby = async (req: Request, res: Response) => {
+  const gender = req.query
   try {
-    const responses = await prisma.baby.findMany({
+    let responses
+    if (gender) {
+      responses = await prisma.baby.findMany({
+        where: {
+          gender
+        },
+        orderBy: { name: 'asc' }
+      })
+    }
+    responses = await prisma.baby.findMany({
       select: {
         name: true,
         gender: true,
-        parent_name: true,
-        phone_number: true,
         address: true,
         birthdate: true,
         baby_condition: true
@@ -48,14 +57,13 @@ export const getBaby = async (req: Request, res: Response) => {
     const result = responses.map((response) => {
       const lastCondition = response.baby_condition[response.baby_condition.length - 1]
       const age = calculateAgeInMonths(response.birthdate)
-      const gender = response.gender === 'male' ? 'Laki-Laki' : 'Perempuan'
 
       let status = null
       if (lastCondition) {
         status = Analyzer({
           weight: lastCondition.weight,
           age,
-          gender: response.gender === 'male' ? 'M' : 'F'
+          gender: response.gender === Gender.MALE ? 'M' : 'F'
         })
       }
 
@@ -68,10 +76,10 @@ export const getBaby = async (req: Request, res: Response) => {
       }
     })
     logger.info('Success get baby data')
-    return res.status(200).send({ status: true, statusCode: 200, data: result })
+    return res.status(200).json({ status: true, statusCode: 200, data: result })
   } catch (error) {
     logger.error('Err = baby-get', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
 
@@ -83,7 +91,7 @@ export const updateBaby = async (req: Request, res: Response) => {
   const { error, value } = createBabyValidation(req.body)
   if (error) {
     logger.error('Err = baby-update', error.details[0].message)
-    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
+    return res.status(422).json({ status: false, statusCode: 422, message: error.details[0].message })
   }
 
   try {
@@ -95,21 +103,19 @@ export const updateBaby = async (req: Request, res: Response) => {
         name: value.name,
         gender: value.gender,
         birthdate: value.birthdate,
-        parent_name: value.parent_name,
-        address: value.address,
-        phone_number: value.phone_number
+        address: value.address
       }
     })
     if (baby) {
       logger.info('Success update new baby')
-      return res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Memperbarui Data' })
+      return res.status(200).json({ status: true, statusCode: 200, message: 'Berhasil Memperbarui Data' })
     } else {
       logger.info('Baby not fount')
-      return res.status(404).send({ status: true, statusCode: 404, message: 'Baby not found' })
+      return res.status(404).json({ status: true, statusCode: 404, message: 'Baby not found' })
     }
   } catch (error) {
     logger.error('Err = baby-update', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
 
@@ -132,14 +138,14 @@ export const deleteBaby = async (req: Request, res: Response) => {
 
     if (response) {
       logger.info('Success delete baby')
-      return res.status(200).send({ status: true, statusCode: 200, message: 'Berhasil Menghapus Data' })
+      return res.status(200).json({ status: true, statusCode: 200, message: 'Berhasil Menghapus Data' })
     } else {
       logger.info('Baby not found')
-      return res.status(404).send({ status: true, statusCode: 404, message: 'Baby not found' })
+      return res.status(404).json({ status: true, statusCode: 404, message: 'Baby not found' })
     }
   } catch (error) {
     logger.error('ERR: delete baby = ', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
 
@@ -154,8 +160,6 @@ export const getBabyDetail = async (req: Request, res: Response) => {
       select: {
         name: true,
         gender: true,
-        parent_name: true,
-        phone_number: true,
         address: true,
         birthdate: true,
         baby_condition: true
@@ -163,19 +167,19 @@ export const getBabyDetail = async (req: Request, res: Response) => {
     })
 
     if (!response) {
-      return res.status(404).send({ status: false, statusCode: 404, message: 'Baby not found' })
+      return res.status(404).json({ status: false, statusCode: 404, message: 'Baby not found' })
     }
 
     const lastCondition = response.baby_condition[response.baby_condition.length - 1]
     const age = calculateAgeInMonths(response.birthdate)
-    const gender = response.gender === 'male' ? 'Laki-Laki' : 'Perempuan'
+    const gender = Gender.MALE ? 'Laki-Laki' : 'Perempuan'
 
     let status = null
     if (lastCondition) {
       status = Analyzer({
         weight: lastCondition.weight,
         age,
-        gender: response.gender === 'male' ? 'M' : 'F'
+        gender: Gender.MALE ? 'M' : 'F'
       })
     }
 
@@ -187,39 +191,39 @@ export const getBabyDetail = async (req: Request, res: Response) => {
     }
 
     logger.info('Success get detail baby')
-    return res.status(200).send({ status: true, statusCode: 200, data: result })
+    return res.status(200).json({ status: true, statusCode: 200, data: result })
   } catch (error) {
     logger.error('ERR: detail-baby = ', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
 
-export const getMaleBaby = async (req: Request, res: Response) => {
-  try {
-    const response = await prisma.baby.findMany({
-      where: {
-        gender: 'male'
-      }
-    })
-    logger.info('Success get male babies')
-    return res.status(200).send({ status: true, statusCode: 200, data: response })
-  } catch (error) {
-    logger.error('Err = male baby-get', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
-  }
-}
+// export const getMaleBaby = async (req: Request, res: Response) => {
+//   try {
+//     const response = await prisma.baby.findMany({
+//       where: {
+//         gender: Gender.MALE
+//       }
+//     })
+//     logger.info('Success get male babies')
+//     return res.status(200).json({ status: true, statusCode: 200, data: response })
+//   } catch (error) {
+//     logger.error('Err = male baby-get', error)
+//     return res.status(422).json({ status: false, statusCode: 422, message: error })
+//   }
+// }
 
-export const getFemaleBaby = async (req: Request, res: Response) => {
-  try {
-    const response = await prisma.baby.findMany({
-      where: {
-        gender: 'female'
-      }
-    })
-    logger.info('Success get female babies')
-    return res.status(200).send({ status: true, statusCode: 200, data: response })
-  } catch (error) {
-    logger.error('Err = female baby-get', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
-  }
-}
+// export const getFemaleBaby = async (req: Request, res: Response) => {
+//   try {
+//     const response = await prisma.baby.findMany({
+//       where: {
+//         gender: Gender.FEMALE
+//       }
+//     })
+//     logger.info('Success get female babies')
+//     return res.status(200).json({ status: true, statusCode: 200, data: response })
+//   } catch (error) {
+//     logger.error('Err = female baby-get', error)
+//     return res.status(422).json({ status: false, statusCode: 422, message: error })
+//   }
+// }
