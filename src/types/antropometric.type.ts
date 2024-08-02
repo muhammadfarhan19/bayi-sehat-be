@@ -17,5 +17,5 @@ export interface inputBabyType {
   parent_name: string
   phone_number: string
   age: number
-  baby_condition: Array<{ weight: number, height: number, months: number, updated_at: Date, created_at: Date }>
+  baby_condition: Array<{ weight: number; height: number; months: number; updated_at: Date; created_at: Date }>
 }

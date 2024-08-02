@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken'
-import config from '../config/environment'
+import dotenv from 'dotenv'
 
-export const signJWT = (payload: Object, options?: jwt.SignOptions | undefined) => {
-  return jwt.sign(payload, config.jwt_private, {
+dotenv.config()
+
+export const signJWT = (payload: { id: string; role: 'USER' | 'ADMIN' }, options?: jwt.SignOptions) => {
+  return jwt.sign(payload, process.env.JWT_PRIVATE as string, {
     ...(options && options),
     algorithm: 'RS256'
   })
@@ -10,17 +12,17 @@ export const signJWT = (payload: Object, options?: jwt.SignOptions | undefined) 
 
 export const verifyJWT = (token: string) => {
   try {
-    const decoded = jwt.verify(token, config.jwt_public)
-    return {
-      valid: true,
-      expired: false,
-      decoded
+    const decoded = jwt.verify(token, process.env.JWT_PUBLIC as string, {
+      algorithms: ['RS256']
+    }) as { id: string; role: 'USER' | 'ADMIN' }
+    return { decoded }
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      return { expired: true }
     }
-  } catch (error: any) {
-    return {
-      valid: false,
-      expired: error.message === 'jwt is expired or not eligible to use',
-      decoded: null
+    if (err instanceof jwt.JsonWebTokenError) {
+      throw new Error('Invalid token')
     }
+    throw err
   }
 }

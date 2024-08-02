@@ -1,7 +1,9 @@
-export default interface UserType {
-  user_id: string
-  email: string
+import { Role } from '../utils/common'
+
+export interface UserType {
   name: string
+  email: string
   password: string
-  role: string
+  phone_number: string
+  role?: Role
 }
