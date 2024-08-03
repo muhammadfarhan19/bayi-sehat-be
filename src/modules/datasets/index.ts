@@ -1,4 +1,4 @@
-import { IDataset } from '../../types/interface'
+import { IDataset } from '../../types/interfaces'
 import BBperU_Male from './BBperU_Male'
 import BBperU_Female from './BBperU_Female'
 

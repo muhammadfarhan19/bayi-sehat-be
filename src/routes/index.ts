@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createBaby, deleteBaby, getBaby, getBabyDetail, updateBaby } from '../controllers/baby.controller'
+import { createBaby, deleteBaby, getAllBabies, getBabyDetail, updateBaby } from '../controllers/baby.controller'
 import { createUserSession, refreshSession, userRegistration } from '../controllers/auth.controller'
 import {
   DeleteBabyCondition,
@@ -22,7 +22,7 @@ router.post('/auth/refresh', refreshSession)
 
 router.use(deserializeToken)
 
-router.get('/baby', getBaby)
+router.get('/baby', getAllBabies)
 router.get('/baby/detail/:id', getBabyDetail)
 router.post('/baby/create', createBaby)
 router.delete('/baby/delete/:id', deleteBaby)

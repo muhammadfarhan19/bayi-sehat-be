@@ -1,4 +1,4 @@
-import { AnalyzerFunc, ScoringFunc } from '..//types/interface'
+import { AnalyzerFunc, ScoringFunc } from '../types/interfaces'
 import { BBperU } from './datasets'
 
 export const Analyzer: AnalyzerFunc = ({ weight, gender, age }) => {

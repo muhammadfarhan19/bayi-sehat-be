@@ -1,5 +1,5 @@
 import BabyConditionType from './condition.type'
-import { Gender } from './interface'
+import { Gender } from './interfaces'
 
 export default interface BabyType {
   id: string

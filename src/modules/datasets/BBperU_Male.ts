@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { IDatasetItem } from '../../types/interface'
+import { IDatasetItem } from '../../types/interfaces'
 
 const BBperU_Male: IDatasetItem[] = [
   [3.3, 3.9],

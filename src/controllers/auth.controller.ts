@@ -101,7 +101,7 @@ export const createUserSession = async (req: Request, res: Response) => {
       })
     }
     const accessToken = signJWT({ id: user.id, role: user.role }, { expiresIn: '1d' })
-    const refreshToken = signJWT({ id: user.id, role: user.role }, { expiresIn: '1d' })
+    const refreshToken = signJWT({ id: user.id, role: user.role }, { expiresIn: '7d' })
     const userRole = user.role
 
     logger.info('SUCCESS: User Login')
@@ -132,7 +132,7 @@ export const refreshSession = async (req: Request, res: Response) => {
 
   try {
     const { decoded }: any = verifyJWT(value.refreshToken)
-    const user = await prisma.user.findUnique({
+    const user: any = await prisma.user.findUnique({
       where: {
         email: decoded._doc.email
       }
