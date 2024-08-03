@@ -20,9 +20,9 @@ const deserializeToken = async (req: Request, res: Response, next: NextFunction)
     if (expired) {
       return res.status(401).json({ message: 'Token expired' })
     }
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof Error) {
-      logger.error('JWT Verification Error:', error.message)
+      logger.error(error)
     }
     return res.status(401).json({ message: 'Invalid Token' })
   }

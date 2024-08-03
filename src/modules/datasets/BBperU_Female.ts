@@ -1,4 +1,4 @@
-import { IDatasetItem } from '../../types/interface'
+import { IDatasetItem } from '../../types/interfaces'
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const BBperU_Female: IDatasetItem[] = [

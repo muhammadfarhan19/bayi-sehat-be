@@ -32,7 +32,7 @@ export const createBaby = async (req: Request, res: Response) => {
   }
 }
 
-export const getBaby = async (req: Request, res: Response) => {
+export const getAllBabies = async (req: Request, res: Response) => {
   const gender = req.query
   try {
     let responses
@@ -197,33 +197,3 @@ export const getBabyDetail = async (req: Request, res: Response) => {
     return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
-
-// export const getMaleBaby = async (req: Request, res: Response) => {
-//   try {
-//     const response = await prisma.baby.findMany({
-//       where: {
-//         gender: Gender.MALE
-//       }
-//     })
-//     logger.info('Success get male babies')
-//     return res.status(200).json({ status: true, statusCode: 200, data: response })
-//   } catch (error) {
-//     logger.error('Err = male baby-get', error)
-//     return res.status(422).json({ status: false, statusCode: 422, message: error })
-//   }
-// }
-
-// export const getFemaleBaby = async (req: Request, res: Response) => {
-//   try {
-//     const response = await prisma.baby.findMany({
-//       where: {
-//         gender: Gender.FEMALE
-//       }
-//     })
-//     logger.info('Success get female babies')
-//     return res.status(200).json({ status: true, statusCode: 200, data: response })
-//   } catch (error) {
-//     logger.error('Err = female baby-get', error)
-//     return res.status(422).json({ status: false, statusCode: 422, message: error })
-//   }
-// }
