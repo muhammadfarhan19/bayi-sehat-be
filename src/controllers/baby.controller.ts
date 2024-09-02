@@ -7,7 +7,6 @@ import { Analyzer } from '..//modules/function'
 import { Gender } from '../utils/common'
 
 export const createBaby = async (req: Request, res: Response) => {
-  const user = req.params
   const { error, value } = createBabyValidation(req.body)
   if (error) {
     logger.error('Err = baby-create', error.details[0].message)
@@ -15,17 +14,16 @@ export const createBaby = async (req: Request, res: Response) => {
   }
 
   try {
-    const baby = await prisma.baby.create({
+    await prisma.baby.create({
       data: {
         name: value.name,
         gender: value.gender,
         birthdate: value.birthdate,
-        address: value.address,
-        user
+        address: value.address
       }
     })
     logger.info('Success add new data')
-    return res.status(200).json({ status: true, statusCode: 200, message: 'Berhasil Menambahkan Data', data: baby })
+    return res.status(200).json({ status: true, statusCode: 200, message: 'Berhasil Menambahkan Data' })
   } catch (error) {
     logger.error('Err = baby-create', error)
     return res.status(422).json({ status: false, statusCode: 422, message: error })
@@ -43,42 +41,44 @@ export const getBaby = async (req: Request, res: Response) => {
         },
         orderBy: { name: 'asc' }
       })
-    }
-    responses = await prisma.baby.findMany({
-      select: {
-        name: true,
-        gender: true,
-        address: true,
-        birthdate: true,
-        baby_condition: true
-      },
-      orderBy: { name: 'asc' }
-    })
-    const result = responses.map((response) => {
-      const lastCondition = response.baby_condition[response.baby_condition.length - 1]
-      const age = calculateAgeInMonths(response.birthdate)
+    } else {
+      responses = await prisma.baby.findMany({
+        select: {
+          id: true,
+          name: true,
+          gender: true,
+          address: true,
+          birthdate: true,
+          baby_condition: true
+        },
+        orderBy: { name: 'asc' }
+      })
+      const result = responses.map((response) => {
+        const lastCondition = response.baby_condition[response.baby_condition.length - 1]
+        const age = calculateAgeInMonths(response.birthdate)
 
-      let status = null
-      if (lastCondition) {
-        status = Analyzer({
-          weight: lastCondition.weight,
+        let status = null
+        if (lastCondition) {
+          status = Analyzer({
+            weight: lastCondition.weight,
+            age,
+            gender: response.gender === Gender.MALE ? 'M' : 'F'
+          })
+        }
+
+        return {
+          ...response,
           age,
-          gender: response.gender === Gender.MALE ? 'M' : 'F'
-        })
-      }
-
-      return {
-        ...response,
-        age,
-        gender,
-        weight: lastCondition ? lastCondition.weight : null,
-        status: status ? status.BBperU : null
-      }
-    })
-    logger.info('Success get baby data')
-    return res.status(200).json({ status: true, statusCode: 200, data: result })
+          gender,
+          weight: lastCondition ? lastCondition.weight : null,
+          status: status ? status.BBperU : null
+        }
+      })
+      logger.info('Success get baby data')
+      return res.status(200).json({ status: true, statusCode: 200, data: result })
+    }
   } catch (error) {
-    logger.error('Err = baby-get', error)
+    logger.error(error)
     return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }
@@ -110,7 +110,7 @@ export const updateBaby = async (req: Request, res: Response) => {
       logger.info('Success update new baby')
       return res.status(200).json({ status: true, statusCode: 200, message: 'Berhasil Memperbarui Data' })
     } else {
-      logger.info('Baby not fount')
+      logger.error('Baby not found')
       return res.status(404).json({ status: true, statusCode: 404, message: 'Baby not found' })
     }
   } catch (error) {

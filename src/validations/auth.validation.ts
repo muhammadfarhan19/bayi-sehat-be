@@ -11,14 +11,14 @@ export const createUserValidation = (payload: UserType) => {
       .messages({
         'string.pattern.base':
           'Password must be at least 8 characters long, contain at least one number, one uppercase letter, and one special character (!@#$%^&*())'
-      }),
-    phone_number: Joi.string()
-      .pattern(/^628\d{8,10}$/)
-      .required()
-      .messages({
-        'string.pattern.base': 'Phone number must be a string of 11-13 digits starting with 628'
-      }),
-    role: Joi.string().valid('USER', 'ADMIN').default('USER')
+      })
+    // phone_number: Joi.string()
+    //   .pattern(/^628\d{8,10}$/)
+    //   .required()
+    //   .messages({
+    //     'string.pattern.base': 'Phone number must be a string of 11-13 digits starting with 628'
+    //   }),
+    // role: Joi.string().valid('USER', 'ADMIN').default('USER')
   })
 
   return schema.validate(payload)

@@ -40,9 +40,9 @@ export const createBabyCondition = async (req: Request, res: Response) => {
       }
     })
     logger.info('Add baby condition successfully')
-    return res.status(201).json({ status: true, statusCode: 201, message: 'Berhasil Menambahkan Data', data: response })
+    return res.status(201).json({ status: true, statusCode: 201, message: 'Berhasil Menambahkan Data' })
   } catch (error) {
-    logger.error('ERR: create - condition = ', error)
+    logger.error(error)
     return res.status(422).json({ status: false, statusCode: 422, message: error })
   }
 }

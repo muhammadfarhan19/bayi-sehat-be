@@ -9,7 +9,7 @@ export const userRegistration = async (req: Request, res: Response) => {
   const { error, value } = createUserValidation(req.body)
 
   if (error) {
-    logger.info('ERR: user - registration = ', error.details[0].message)
+    logger.error('ERR: user - registration = ', error.details[0].message)
     return res.status(422).json({
       status: false,
       statusCode: 422,
@@ -25,7 +25,7 @@ export const userRegistration = async (req: Request, res: Response) => {
     })
 
     if (emailExists) {
-      logger.info('ERR: Email already used')
+      logger.error('ERR: Email already used')
       return res.status(422).json({
         status: false,
         statusCode: 422,
@@ -33,20 +33,20 @@ export const userRegistration = async (req: Request, res: Response) => {
       })
     }
 
-    const phoneNumberExists = await prisma.user.findUnique({
-      where: {
-        phone_number: value.phone_number
-      }
-    })
+    // const phoneNumberExists = await prisma.user.findUnique({
+    //   where: {
+    //     phone_number: value.phone_number
+    //   }
+    // })
 
-    if (phoneNumberExists) {
-      logger.info('ERR: Phone number already used')
-      return res.status(422).json({
-        status: false,
-        statusCode: 422,
-        message: 'Nomor HP telah terdaftar'
-      })
-    }
+    // if (phoneNumberExists) {
+    //   logger.error('ERR: Phone number already used')
+    //   return res.status(422).json({
+    //     status: false,
+    //     statusCode: 422,
+    //     message: 'Nomor HP telah terdaftar'
+    //   })
+    // }
 
     value.password = `${hashing(value.password)}`
     await prisma.user.create({
@@ -54,7 +54,6 @@ export const userRegistration = async (req: Request, res: Response) => {
         name: value.name,
         email: value.email,
         password: value.password,
-        role: value.role,
         phone_number: value.phone_number
       }
     })
@@ -65,7 +64,7 @@ export const userRegistration = async (req: Request, res: Response) => {
       message: 'Berhasil Mendaftar'
     })
   } catch (error: any) {
-    logger.info('ERR: auth - registration = ', error)
+    logger.error(error)
     return res.status(422).json({
       status: false,
       statusCode: 422,
@@ -100,8 +99,8 @@ export const createUserSession = async (req: Request, res: Response) => {
         message: 'Email atau Kata Sandi Salah!!'
       })
     }
-    const accessToken = signJWT({ id: user.id, role: user.role }, { expiresIn: '1d' })
-    const refreshToken = signJWT({ id: user.id, role: user.role }, { expiresIn: '1d' })
+    const accessToken = signJWT({ id: user.id }, { expiresIn: '1d' })
+    const refreshToken = signJWT({ id: user.id }, { expiresIn: '1d' })
     const userRole = user.role
 
     logger.info('SUCCESS: User Login')
@@ -139,14 +138,13 @@ export const refreshSession = async (req: Request, res: Response) => {
     })
     if (!user) return false
 
-    const accessToken = signJWT({ id: user.id, role: user.role }, { expiresIn: '1d' })
-    const refreshToken = signJWT({ id: user.id, role: user.role }, { expiresIn: '7d' })
-    const userRole = user.role
+    const accessToken = signJWT({ id: user.id }, { expiresIn: '1d' })
+    const refreshToken = signJWT({ id: user.id }, { expiresIn: '7d' })
     return res.status(200).json({
       status: true,
       statusCode: 200,
       message: 'Refresh Session Successfully',
-      data: { accessToken, refreshToken, userRole }
+      data: { accessToken, refreshToken }
     })
   } catch (error: any) {
     logger.info('ERR: refresh - token = ', error.message)

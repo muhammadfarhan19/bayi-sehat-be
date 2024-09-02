@@ -20,13 +20,13 @@ router.post('/auth/register', userRegistration)
 router.post('/auth/login', createUserSession)
 router.post('/auth/refresh', refreshSession)
 
-router.use(deserializeToken)
+// router.use(deserializeToken)
 
 router.get('/baby', getBaby)
 router.get('/baby/detail/:id', getBabyDetail)
 router.post('/baby/create', createBaby)
 router.delete('/baby/delete/:id', deleteBaby)
-router.put('/baby/put/:id', updateBaby)
+router.put('/baby/update/:id', updateBaby)
 
 router.post('/condition/create/:id', createBabyCondition)
 router.delete('/condition/delete/:id', DeleteBabyCondition)
